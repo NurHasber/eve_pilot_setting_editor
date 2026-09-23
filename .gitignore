@@ -10,9 +10,9 @@ _src/build/
 _src/*.spec
 dist/
 
-# Built binaries (keep the distributed Windows build tracked)
+# Built binaries — only the current versioned Windows build is tracked
 *.exe
-!EveSettingsCopy.exe
+!EveSettingsCopy_v*.exe
 
 # Local runtime / user data
 config.json

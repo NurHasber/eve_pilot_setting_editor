@@ -355,7 +355,7 @@ class StatusBar(tk.Frame):
 
         right = tk.Frame(self, bg=T.BG_TITLE)
         right.pack(side=tk.RIGHT, padx=12)
-        self._ver = tk.Label(right, text="v1.0.0", bg=T.BG_TITLE, fg=T.TEXT_DIM, font=T.FONT_SMALL)
+        self._ver = tk.Label(right, text="", bg=T.BG_TITLE, fg=T.TEXT_DIM, font=T.FONT_SMALL)
         self._ver.pack(side=tk.LEFT, padx=(0, 8))
         self._info_icon = make_icon(right, "info", T.TEXT_DIM, 11)
         self._shield_icon = make_icon(right, "shield", T.TEXT_DIM, 11)

@@ -37,9 +37,11 @@ Close EVE before copying. Always keep a backup if you care about existing alt la
 
 ## Run (Windows)
 
-1. Download `EveSettingsCopy.exe` from [Releases](https://github.com/NurHasber/eve_pilot_setting_editor/releases) (or build from source).
-2. Place the single `.exe` anywhere.
+1. Download `EveSettingsCopy_vX.Y.Z.exe` from the repository root (or [Releases](https://github.com/NurHasber/eve_pilot_setting_editor/releases) when published).
+2. Place the single versioned `.exe` anywhere.
 3. On first run it uses `%LOCALAPPDATA%\EveSettingsCopy\` for config, backups, and runtime unpack.
+
+Only the **latest** build is kept in the repo (older `EveSettingsCopy_v*.exe` files are replaced on each version bump).
 
 **Requirements:** Windows 10/11. No install wizard.
 
@@ -49,8 +51,9 @@ Close EVE before copying. Always keep a backup if you care about existing alt la
 Python 3.11+ recommended
 pip install pyinstaller pillow
 cd _src
-python -m PyInstaller --onefile --windowed --name EveSettingsCopy ^
+python -m PyInstaller --onefile --windowed --name EveSettingsCopy_v1.0.1 ^
   --icon assets\icons\app.ico ^
+  --splash assets\icons\splash_boot.png ^
   --runtime-tmpdir "%LOCALAPPDATA%\EveSettingsCopy\_runtime" ^
   --add-data "assets;assets" ^
   --hidden-import=PIL --hidden-import=PIL.Image --hidden-import=PIL.ImageDraw ^
