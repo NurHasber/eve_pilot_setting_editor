@@ -10,8 +10,9 @@ _src/build/
 _src/*.spec
 dist/
 
-# Built binary (attach via GitHub Releases instead)
+# Built binaries (keep the distributed Windows build tracked)
 *.exe
+!EveSettingsCopy.exe
 
 # Local runtime / user data
 config.json
