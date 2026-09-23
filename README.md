@@ -37,20 +37,13 @@ Close EVE before copying. Always keep a backup if you care about existing alt la
 
 ## Run (Windows)
 
-1. Download `EveSettingsCopy_vX.Y.Z.exe` from the repository root.
-2. Run it once — it **installs** the real app into  
-   `%LOCALAPPDATA%\EveSettingsCopy\app\` (only when missing or when the version changes).
-3. It then starts the installed app. Later launches of the **installed** app are instant (no full unpack).
+1. Download `EveSettingsCopy_vX.Y.Z.exe` and run it once (installer/bootstrap).
+2. It installs into `%LOCALAPPDATA%\EveSettingsCopy\app\` and creates a Desktop shortcut **EVE Settings Copy**.
+3. **For daily use, open that Desktop shortcut** — it starts instantly (no 2–3s blank wait).
 
-For the fastest daily use, start:
-
-`%LOCALAPPDATA%\EveSettingsCopy\app\EveSettingsCopy.exe`
-
-(or pin that file to the taskbar). The versioned GitHub `.exe` is a bootstrapper; classic PyInstaller one-file mode cannot skip unpacking itself on every double-click.
+Why the wait on the versioned `.exe`? It is a one-file bootstrapper (~40MB). Windows must unpack it before anything can appear. A splash logo is shown during that unpack. The installed app + Desktop shortcut does not unpack every time.
 
 Only the **latest** `EveSettingsCopy_v*.exe` is kept in the repo.
-
-**Requirements:** Windows 10/11.
 
 ## Build from source
 

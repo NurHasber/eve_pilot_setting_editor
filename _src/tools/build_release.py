@@ -90,8 +90,10 @@ def main() -> None:
             "--windowed",
             f"--name={LAUNCHER_NAME}",
             f"--icon={SRC / 'assets' / 'icons' / 'app.ico'}",
+            f"--splash={SRC / 'assets' / 'icons' / 'splash_boot.png'}",
             f"--add-data={payload_copy};.",
             "--hidden-import=single_instance",
+            "--hidden-import=shortcuts",
             f"--distpath={PROJ}",
             f"--workpath={work / 'work_launcher'}",
             f"--specpath={work}",
@@ -113,9 +115,16 @@ def main() -> None:
     shutil.copytree(app_dir, local_app)
     (local_app / "version.txt").write_text(APP_VERSION + "\n", encoding="utf-8")
 
+    # Desktop / Start Menu shortcuts → fast onedir (no onefile unpack)
+    sys.path.insert(0, str(SRC))
+    from shortcuts import ensure_app_shortcuts
+
+    ensure_app_shortcuts(local_app / "EveSettingsCopy.exe")
+
     out = PROJ / f"{LAUNCHER_NAME}.exe"
     print("RELEASE:", out, out.stat().st_size)
     print("INSTALLED:", local_app)
+    print("Use Desktop shortcut 'EVE Settings Copy' for instant start.")
 
 
 if __name__ == "__main__":

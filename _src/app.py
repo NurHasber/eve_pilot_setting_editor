@@ -33,10 +33,14 @@ def main() -> None:
         if not try_become_primary():
             return
 
-        from ui.boot_splash import BootSplash
         from ui.main_window import MainWindow
+        import os
 
-        BootSplash(duration_ms=1400).run()
+        # Skip when started from the versioned launcher (it already showed a splash).
+        if os.environ.get("ESC_SKIP_BOOT_SPLASH") != "1":
+            from ui.boot_splash import BootSplash
+
+            BootSplash(duration_ms=1400).run()
 
         app = MainWindow()
         app.update_idletasks()
