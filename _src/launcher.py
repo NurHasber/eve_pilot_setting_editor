@@ -29,7 +29,7 @@ from pathlib import Path
 from tkinter import messagebox
 
 # Keep in sync with core.logic.APP_VERSION when releasing.
-APP_VERSION = "1.0.4"
+APP_VERSION = "1.0.5"
 APP_NAME = "EVE Settings Copy"
 
 

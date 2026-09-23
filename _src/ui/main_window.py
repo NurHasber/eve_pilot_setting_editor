@@ -25,6 +25,7 @@ from ui import theme as T
 from ui.tabs.about import AboutTab
 from ui.tabs.settings_copy import SettingsCopyTab
 from ui.texture import TexturedFrame, texture_photo
+from ui.widgets import StatusBar, TabBar, WindowButton
 from ui.win_icon import apply_window_icon, set_app_user_model_id
 
 
