@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# PyInstaller
+_src/build/
+_src/*.spec
+dist/
+
+# Built binary (attach via GitHub Releases instead)
+*.exe
+
+# Local runtime / user data
+config.json
+Backups/
+EveSettingsCopy_error.log
+_runtime/
+
+# OS / editor
+Thumbs.db
+Desktop.ini
+.DS_Store
+.idea/
+.vscode/
+*.log

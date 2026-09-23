@@ -1,0 +1,29 @@
+"""EVE-inspired dark theme tokens."""
+
+BG = "#0B0E11"
+BG_PANEL = "#12161B"
+BG_INPUT = "#1A1F26"
+BG_BUTTON = "#151A20"
+BG_TITLE = "#0E1216"
+BORDER = "#2A323C"
+BORDER_SOFT = "#1E262E"
+ORANGE = "#E28739"
+ORANGE_HOT = "#F0A030"
+CYAN = "#3AA0D9"
+CYAN_HOT = "#55B6E8"
+TEXT = "#D8DDE3"
+TEXT_MUTED = "#8B949E"
+TEXT_DIM = "#5C6570"
+ERROR = "#E05A5A"
+OK = "#3AA0D9"
+
+FONT_UI = ("Segoe UI", 10)
+FONT_UI_BOLD = ("Segoe UI", 10, "bold")
+FONT_SMALL = ("Segoe UI", 9)
+FONT_TITLE = ("Segoe UI", 11)
+FONT_SECTION = ("Segoe UI", 8, "bold")
+FONT_TAB = ("Segoe UI", 10)
+FONT_ACTION = ("Segoe UI", 10, "bold")
+
+WINDOW_W = 620
+WINDOW_H = 400
