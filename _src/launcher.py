@@ -29,7 +29,7 @@ from pathlib import Path
 from tkinter import messagebox
 
 # Keep in sync with core.logic.APP_VERSION when releasing.
-APP_VERSION = "1.0.5"
+APP_VERSION = "1.0.6"
 APP_NAME = "EVE Settings Copy"
 
 
@@ -113,6 +113,15 @@ def show_status(title: str, text: str) -> tk.Tk:
 
 def main() -> int:
     try:
+        # Prefer focusing an already-running UI instead of starting a second process.
+        try:
+            from single_instance import activate_existing_window, already_running
+
+            if already_running() and activate_existing_window():
+                return 0
+        except Exception:
+            pass
+
         if needs_install():
             ui = show_status(APP_NAME, f"Installing v{APP_VERSION}…\nThis happens only once per version.")
             try:

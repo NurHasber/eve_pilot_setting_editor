@@ -91,6 +91,7 @@ def main() -> None:
             f"--name={LAUNCHER_NAME}",
             f"--icon={SRC / 'assets' / 'icons' / 'app.ico'}",
             f"--add-data={payload_copy};.",
+            "--hidden-import=single_instance",
             f"--distpath={PROJ}",
             f"--workpath={work / 'work_launcher'}",
             f"--specpath={work}",

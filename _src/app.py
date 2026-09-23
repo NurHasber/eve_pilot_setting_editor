@@ -13,6 +13,7 @@ if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
 from core import APP_NAME, app_dir  # noqa: E402
+from single_instance import try_become_primary  # noqa: E402
 from ui.win_icon import set_app_user_model_id  # noqa: E402
 
 
@@ -28,8 +29,9 @@ def _log_crash(exc: BaseException) -> Path:
 
 def main() -> None:
     try:
-        # Before any Tk window — otherwise taskbar sticks to the default Tk feather.
         set_app_user_model_id()
+        if not try_become_primary():
+            return
 
         from ui.boot_splash import BootSplash
         from ui.main_window import MainWindow
