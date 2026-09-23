@@ -41,7 +41,7 @@ Close EVE before copying. Always keep a backup if you care about existing alt la
 2. It installs into `%LOCALAPPDATA%\EveSettingsCopy\app\` and creates a Desktop shortcut **EVE Settings Copy**.
 3. **For daily use, open that Desktop shortcut** — it starts instantly (no 2–3s blank wait).
 
-Why the wait on the versioned `.exe`? It is a one-file bootstrapper (~40MB). Windows must unpack it before anything can appear. A splash logo is shown during that unpack. The installed app + Desktop shortcut does not unpack every time.
+Why the wait on the versioned `.exe`? It is a one-file bootstrapper (~40MB). Windows must unpack it before anything can appear. An app-sized splash covers that unpack, then the installed UI reveals in the same footprint. The Desktop shortcut skips the fat unpack entirely.
 
 Only the **latest** `EveSettingsCopy_v*.exe` is kept in the repo.
 

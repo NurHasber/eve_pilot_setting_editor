@@ -33,20 +33,27 @@ def main() -> None:
         if not try_become_primary():
             return
 
-        from ui.main_window import MainWindow
-        import os
+        from ui.boot_splash import BootSplash
 
-        # Skip when started from the versioned launcher (it already showed a splash).
-        if os.environ.get("ESC_SKIP_BOOT_SPLASH") != "1":
-            from ui.boot_splash import BootSplash
+        # Show app-sized splash immediately, build MainWindow underneath it.
+        splash = BootSplash(min_ms=1200)
 
-            BootSplash(duration_ms=1400).run()
+        def _build_app():
+            from ui.main_window import MainWindow
 
-        app = MainWindow()
-        app.update_idletasks()
+            app = MainWindow()
+            app.withdraw()
+            app.geometry(splash.geometry_str())
+            app.update_idletasks()
+            return app
+
+        app = splash.pump_while(_build_app)
+        app.deiconify()
         app.lift()
         app.attributes("-topmost", True)
-        app.after(250, lambda: app.attributes("-topmost", False))
+        app.update_idletasks()
+        splash.hide_keep_alive()
+        app.after(200, lambda: app.attributes("-topmost", False))
         app.focus_force()
         app.mainloop()
     except Exception as exc:  # noqa: BLE001

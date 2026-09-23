@@ -37,6 +37,8 @@ class MainWindow(tk.Tk):
         self.geometry(f"{T.WINDOW_W}x{T.WINDOW_H}")
         self.minsize(560, 380)
         self.configure(bg=T.BG)
+        # Stay hidden until boot splash hands off (see app.py).
+        self.withdraw()
         # Icon must be applied before overrideredirect for a reliable taskbar glyph.
         apply_window_icon(self)
         self.overrideredirect(True)

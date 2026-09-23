@@ -11,7 +11,7 @@ from datetime import datetime
 from pathlib import Path
 
 APP_NAME = "EVE Settings Copy"
-APP_VERSION = "1.0.7"
+APP_VERSION = "1.0.8"
 CONFIG_NAME = "config.json"
 STATUS_RESET_MS = 4000
 

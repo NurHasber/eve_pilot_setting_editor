@@ -19,7 +19,7 @@ import zipfile
 from pathlib import Path
 from tkinter import messagebox
 
-APP_VERSION = "1.0.7"
+APP_VERSION = "1.0.8"
 APP_NAME = "EVE Settings Copy"
 
 
@@ -61,10 +61,6 @@ def installed_exe() -> Path:
 
 def version_marker() -> Path:
     return app_install_dir() / "version.txt"
-
-
-def tip_marker() -> Path:
-    return install_root() / "shortcut_tip_shown.txt"
 
 
 def payload_zip() -> Path:
@@ -132,29 +128,13 @@ def main() -> int:
 
         ensure_app_shortcuts(installed_exe())
 
-        # Hand off: close bootloader splash, start installed onedir (skip its BootSplash).
+        # Hand off: close bootloader splash; installed app shows app-sized BootSplash.
         _close_pyi_splash()
-        env = os.environ.copy()
-        env["ESC_SKIP_BOOT_SPLASH"] = "1"
         subprocess.Popen(
             [str(installed_exe())],
             cwd=str(installed_exe().parent),
-            env=env,
             close_fds=True,
         )
-
-        if not tip_marker().is_file():
-            tip_marker().write_text("1\n", encoding="utf-8")
-            root = tk.Tk()
-            root.withdraw()
-            messagebox.showinfo(
-                APP_NAME,
-                "For instant startups next time, use the Desktop shortcut:\n"
-                "“EVE Settings Copy”\n\n"
-                "It opens the installed app directly (no waiting for this setup .exe).",
-            )
-            root.destroy()
-
         return 0
     except Exception as exc:  # noqa: BLE001
         _close_pyi_splash()
