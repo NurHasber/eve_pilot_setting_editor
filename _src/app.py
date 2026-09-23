@@ -33,28 +33,10 @@ def main() -> None:
         if not try_become_primary():
             return
 
-        from ui.boot_splash import BootSplash
+        from ui.main_window import MainWindow
 
-        # Show app-sized splash immediately, build MainWindow underneath it.
-        splash = BootSplash(min_ms=1200)
-
-        def _build_app():
-            from ui.main_window import MainWindow
-
-            app = MainWindow()
-            app.withdraw()
-            app.geometry(splash.geometry_str())
-            app.update_idletasks()
-            return app
-
-        app = splash.pump_while(_build_app)
-        app.deiconify()
-        app.lift()
-        app.attributes("-topmost", True)
-        app.update_idletasks()
-        splash.hide_keep_alive()
-        app.after(200, lambda: app.attributes("-topmost", False))
-        app.focus_force()
+        # Single Tk root: splash is a Toplevel overlay that stays until UI is painted.
+        app = MainWindow(boot_splash=True)
         app.mainloop()
     except Exception as exc:  # noqa: BLE001
         log_path = _log_crash(exc)

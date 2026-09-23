@@ -30,14 +30,14 @@ from ui.win_icon import apply_window_icon, set_app_user_model_id
 
 
 class MainWindow(tk.Tk):
-    def __init__(self) -> None:
+    def __init__(self, boot_splash: bool = True) -> None:
         super().__init__()
         set_app_user_model_id()
         self.title(f"{APP_NAME} v{APP_VERSION}")
         self.geometry(f"{T.WINDOW_W}x{T.WINDOW_H}")
         self.minsize(560, 380)
         self.configure(bg=T.BG)
-        # Stay hidden until boot splash hands off (see app.py).
+        # Hidden until splash hands off (avoids a flash of half-built UI).
         self.withdraw()
         # Icon must be applied before overrideredirect for a reliable taskbar glyph.
         apply_window_icon(self)
@@ -45,6 +45,13 @@ class MainWindow(tk.Tk):
         self._offset = (0, 0)
         self._status_reset_job: str | None = None
         self._is_max = False
+
+        splash = None
+        if boot_splash:
+            from ui.boot_splash import BootSplash
+
+            # Show app-sized logo plate immediately, before heavy UI work.
+            splash = BootSplash(self, min_ms=1400)
 
         self.settings_dir = find_settings_default()
         self.config = load_config()
@@ -75,6 +82,23 @@ class MainWindow(tk.Tk):
                 "%LOCALAPPDATA%\\CCP\\EVE\\d_eve_tq_tranquility\\settings_Default",
                 error=True,
             )
+
+        if splash is not None:
+            # Place the real window under the splash, paint it, then reveal.
+            self.geometry(splash.geometry_str())
+            self.deiconify()
+            self.lift()
+            self.attributes("-topmost", True)
+            self.update_idletasks()
+            self.update()
+            splash.lift()
+            splash.hold_until_ready()
+            splash.close_splash()
+            self.after(200, lambda: self.attributes("-topmost", False))
+            self.focus_force()
+        else:
+            self.deiconify()
+            self._center()
 
     def _install_root_texture(self) -> None:
         self._bg_canvas = tk.Canvas(self, highlightthickness=0, bd=0, bg=T.BG)
