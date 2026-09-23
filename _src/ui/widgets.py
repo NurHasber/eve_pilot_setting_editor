@@ -179,11 +179,13 @@ class ActionButton(tk.Canvas):
 
 
 class DarkEntry(tk.Frame):
+    """Readonly-looking entry that reliably shows StringVar values on Windows Tk."""
+
     def __init__(self, master: tk.Misc, textvariable: tk.StringVar, **kwargs) -> None:
         super().__init__(master, bg=T.BORDER, padx=1, pady=1, **kwargs)
+        self._var = textvariable
         self.entry = tk.Entry(
             self,
-            textvariable=textvariable,
             bg=T.BG_INPUT,
             fg=T.TEXT,
             insertbackground=T.TEXT,
@@ -194,6 +196,15 @@ class DarkEntry(tk.Frame):
             disabledforeground=T.TEXT,
         )
         self.entry.pack(fill=tk.BOTH, expand=True, ipady=4, padx=6)
+        self._apply()
+        self._var.trace_add("write", lambda *_args: self._apply())
+
+    def _apply(self) -> None:
+        value = self._var.get()
+        self.entry.configure(state="normal")
+        self.entry.delete(0, tk.END)
+        if value:
+            self.entry.insert(0, value)
         self.entry.configure(state="readonly")
 
 

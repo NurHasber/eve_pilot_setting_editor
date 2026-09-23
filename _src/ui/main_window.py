@@ -57,6 +57,9 @@ class MainWindow(tk.Tk):
         self._build_chrome()
         self._build_body()
         self._validate_remembered_masters()
+        # Re-apply after widgets exist (readonly Entry can miss the initial StringVar value).
+        self.master_user.set(self.master_user.get())
+        self.master_char.set(self.master_char.get())
         self._center()
         self.after(50, self._ensure_taskbar_button)
         self.bind("<Map>", self._on_map)
