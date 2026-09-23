@@ -5,9 +5,11 @@ __pycache__/
 .venv/
 venv/
 
-# PyInstaller
+# PyInstaller / release build junk
 _src/build/
+_src/build_release/
 _src/*.spec
+_src/payload.zip
 dist/
 
 # Built binaries — only the current versioned Windows build is tracked

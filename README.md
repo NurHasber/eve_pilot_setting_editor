@@ -37,13 +37,20 @@ Close EVE before copying. Always keep a backup if you care about existing alt la
 
 ## Run (Windows)
 
-1. Download `EveSettingsCopy_vX.Y.Z.exe` from the repository root (or [Releases](https://github.com/NurHasber/eve_pilot_setting_editor/releases) when published).
-2. Place the single versioned `.exe` anywhere.
-3. On first run it uses `%LOCALAPPDATA%\EveSettingsCopy\` for config, backups, and runtime unpack.
+1. Download `EveSettingsCopy_vX.Y.Z.exe` from the repository root.
+2. Run it once — it **installs** the real app into  
+   `%LOCALAPPDATA%\EveSettingsCopy\app\` (only when missing or when the version changes).
+3. It then starts the installed app. Later launches of the **installed** app are instant (no full unpack).
 
-Only the **latest** build is kept in the repo (older `EveSettingsCopy_v*.exe` files are replaced on each version bump).
+For the fastest daily use, start:
 
-**Requirements:** Windows 10/11. No install wizard.
+`%LOCALAPPDATA%\EveSettingsCopy\app\EveSettingsCopy.exe`
+
+(or pin that file to the taskbar). The versioned GitHub `.exe` is a bootstrapper; classic PyInstaller one-file mode cannot skip unpacking itself on every double-click.
+
+Only the **latest** `EveSettingsCopy_v*.exe` is kept in the repo.
+
+**Requirements:** Windows 10/11.
 
 ## Build from source
 
@@ -51,27 +58,18 @@ Only the **latest** build is kept in the repo (older `EveSettingsCopy_v*.exe` fi
 Python 3.11+ recommended
 pip install pyinstaller pillow
 cd _src
-python -m PyInstaller --onefile --windowed --name EveSettingsCopy_v1.0.1 ^
-  --icon assets\icons\app.ico ^
-  --splash assets\icons\splash_boot.png ^
-  --runtime-tmpdir "%LOCALAPPDATA%\EveSettingsCopy\_runtime" ^
-  --add-data "assets;assets" ^
-  --hidden-import=PIL --hidden-import=PIL.Image --hidden-import=PIL.ImageDraw ^
-  app.py
+python tools\build_release.py
 ```
 
-Or run without packing:
-
-```text
-cd _src
-python app.py
-```
+This builds an onedir app, zips it as payload, and produces `EveSettingsCopy_vX.Y.Z.exe` in the project root.
 
 ## Project layout
 
 ```text
 _src/
-  app.py           # entry point
+  app.py           # installed app entry
+  launcher.py      # versioned bootstrap exe entry
+  tools/build_release.py
   core/            # path discovery, copy, backup, config
   ui/              # window, tabs, theme, widgets
   assets/icons/    # logo and app icon
