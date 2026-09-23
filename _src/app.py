@@ -35,8 +35,9 @@ def main() -> None:
 
         from ui.main_window import MainWindow
 
-        # Single Tk root: splash is a Toplevel overlay that stays until UI is painted.
-        app = MainWindow(boot_splash=True)
+        # No in-app splash: daily launches use the Desktop shortcut (fast onedir).
+        # Fat versioned .exe shows PyInstaller bootloader splash during unpack only.
+        app = MainWindow()
         app.mainloop()
     except Exception as exc:  # noqa: BLE001
         log_path = _log_crash(exc)

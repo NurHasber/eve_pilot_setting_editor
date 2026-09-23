@@ -30,28 +30,22 @@ from ui.win_icon import apply_window_icon, set_app_user_model_id
 
 
 class MainWindow(tk.Tk):
-    def __init__(self, boot_splash: bool = True) -> None:
+    def __init__(self) -> None:
         super().__init__()
         set_app_user_model_id()
         self.title(f"{APP_NAME} v{APP_VERSION}")
-        self.geometry(f"{T.WINDOW_W}x{T.WINDOW_H}")
         self.minsize(560, 380)
         self.configure(bg=T.BG)
-        # Hidden until splash hands off (avoids a flash of half-built UI).
-        self.withdraw()
-        # Icon must be applied before overrideredirect for a reliable taskbar glyph.
+        # Icon before overrideredirect for a reliable taskbar glyph.
         apply_window_icon(self)
         self.overrideredirect(True)
         self._offset = (0, 0)
         self._status_reset_job: str | None = None
         self._is_max = False
 
-        splash = None
-        if boot_splash:
-            from ui.boot_splash import BootSplash
-
-            # Show app-sized logo plate immediately, before heavy UI work.
-            splash = BootSplash(self, min_ms=1400)
+        # Always start centered — never let Windows restore the last close position.
+        self._force_center()
+        self.withdraw()
 
         self.settings_dir = find_settings_default()
         self.config = load_config()
@@ -71,9 +65,7 @@ class MainWindow(tk.Tk):
         # Re-apply after widgets exist (readonly Entry can miss the initial StringVar value).
         self.master_user.set(self.master_user.get())
         self.master_char.set(self.master_char.get())
-        self._center()
-        self.after(50, self._ensure_taskbar_button)
-        self.after(80, lambda: apply_window_icon(self))
+        self._force_center()
         self.bind("<Map>", self._on_map)
 
         if not self.settings_dir:
@@ -83,22 +75,14 @@ class MainWindow(tk.Tk):
                 error=True,
             )
 
-        if splash is not None:
-            # Place the real window under the splash, paint it, then reveal.
-            self.geometry(splash.geometry_str())
-            self.deiconify()
-            self.lift()
-            self.attributes("-topmost", True)
-            self.update_idletasks()
-            self.update()
-            splash.lift()
-            splash.hold_until_ready()
-            splash.close_splash()
-            self.after(200, lambda: self.attributes("-topmost", False))
-            self.focus_force()
-        else:
-            self.deiconify()
-            self._center()
+        self.deiconify()
+        self._force_center()
+        self.attributes("-topmost", True)
+        self._ensure_taskbar_button(reposition=True)
+        self._force_center()
+        self.after(200, lambda: self.attributes("-topmost", False))
+        self.focus_force()
+        self.after(80, lambda: apply_window_icon(self))
 
     def _install_root_texture(self) -> None:
         self._bg_canvas = tk.Canvas(self, highlightthickness=0, bd=0, bg=T.BG)
@@ -115,7 +99,7 @@ class MainWindow(tk.Tk):
         self._bg_canvas.create_image(0, 0, anchor="nw", image=self._root_bg, tags="tex")
         self._bg_canvas.tag_lower("tex")
 
-    def _ensure_taskbar_button(self) -> None:
+    def _ensure_taskbar_button(self, reposition: bool = False) -> None:
         """overrideredirect hides the taskbar entry — force WS_EX_APPWINDOW."""
         try:
             self.update_idletasks()
@@ -129,9 +113,13 @@ class MainWindow(tk.Tk):
             style = (style & ~WS_EX_TOOLWINDOW) | WS_EX_APPWINDOW
             ctypes.windll.user32.SetWindowLongW(hwnd, GWL_EXSTYLE, style)
             apply_window_icon(self)
+            # Sync flash — async after() used to race and restore last position.
             self.withdraw()
-            self.after(20, self.deiconify)
-            self.after(40, lambda: apply_window_icon(self))
+            self.update_idletasks()
+            self.deiconify()
+            if reposition:
+                self._force_center()
+            apply_window_icon(self)
         except Exception:
             pass
 
@@ -201,13 +189,17 @@ class MainWindow(tk.Tk):
         else:
             self.geometry(getattr(self, "_restore_geom", f"{T.WINDOW_W}x{T.WINDOW_H}"))
 
-    def _center(self) -> None:
+    def _force_center(self) -> None:
+        """Screen-center with fixed size (ignore Windows last-close position)."""
+        w, h = T.WINDOW_W, T.WINDOW_H
         self.update_idletasks()
-        w = self.winfo_width()
-        h = self.winfo_height()
         x = (self.winfo_screenwidth() - w) // 2
         y = (self.winfo_screenheight() - h) // 2
-        self.geometry(f"+{x}+{y}")
+        self.geometry(f"{w}x{h}+{x}+{y}")
+        self.update_idletasks()
+
+    def _center(self) -> None:
+        self._force_center()
 
     def _build_body(self) -> None:
         self.tab_bar = TabBar(

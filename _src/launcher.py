@@ -19,7 +19,7 @@ import zipfile
 from pathlib import Path
 from tkinter import messagebox
 
-APP_VERSION = "1.0.9"
+APP_VERSION = "1.0.10"
 APP_NAME = "EVE Settings Copy"
 
 
@@ -128,7 +128,7 @@ def main() -> int:
 
         ensure_app_shortcuts(installed_exe())
 
-        # Hand off: close bootloader splash; installed app shows app-sized BootSplash.
+        # Hand off: close bootloader splash; installed onedir opens immediately (no 2nd splash).
         _close_pyi_splash()
         subprocess.Popen(
             [str(installed_exe())],

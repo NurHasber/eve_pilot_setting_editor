@@ -37,11 +37,15 @@ Close EVE before copying. Always keep a backup if you care about existing alt la
 
 ## Run (Windows)
 
-1. Download `EveSettingsCopy_vX.Y.Z.exe` and run it once (installer/bootstrap).
-2. It installs into `%LOCALAPPDATA%\EveSettingsCopy\app\` and creates a Desktop shortcut **EVE Settings Copy**.
-3. **For daily use, open that Desktop shortcut** — it starts instantly (no 2–3s blank wait).
+**Daily use:** open the Desktop shortcut **EVE Settings Copy** (created on first run). That launches the installed app under `%LOCALAPPDATA%\EveSettingsCopy\app\` — near-instant, no splash, window opens centered.
 
-Why the wait on the versioned `.exe`? It is a one-file bootstrapper (~40MB). Windows must unpack it before anything can appear. An app-sized splash covers that unpack, then the installed UI reveals in the same footprint. The Desktop shortcut skips the fat unpack entirely.
+**First install / update:**
+
+1. Download the latest `EveSettingsCopy_vX.Y.Z.exe` from this repo.
+2. Run it once. It unpacks/installs into LocalAppData and refreshes the Desktop + Start Menu shortcuts.
+3. Prefer the shortcut afterward; the versioned `.exe` is only a bootstrapper.
+
+The versioned file is a ~40MB one-file bootstrap. Windows must unpack it before Python can start — a short splash appears **only during that unpack**. The installed onedir app itself has **no** loading animation.
 
 Only the **latest** `EveSettingsCopy_v*.exe` is kept in the repo.
 
@@ -54,18 +58,20 @@ cd _src
 python tools\build_release.py
 ```
 
-This builds an onedir app, zips it as payload, and produces `EveSettingsCopy_vX.Y.Z.exe` in the project root.
+This builds an onedir app, zips it as payload, and produces `EveSettingsCopy_vX.Y.Z.exe` in the project root. It also installs into LocalAppData and refreshes shortcuts for local testing.
 
 ## Project layout
 
 ```text
 _src/
-  app.py           # installed app entry
-  launcher.py      # versioned bootstrap exe entry
+  app.py           # installed app entry (no splash)
+  launcher.py      # versioned bootstrap exe (PyInstaller splash on unpack)
+  shortcuts.py     # Desktop / Start Menu .lnk helpers
+  single_instance.py
   tools/build_release.py
   core/            # path discovery, copy, backup, config
   ui/              # window, tabs, theme, widgets
-  assets/icons/    # logo and app icon
+  assets/icons/    # logo, app icon, bootloader splash image
 ```
 
 ## Credits

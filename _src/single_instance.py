@@ -17,7 +17,7 @@ def _user32():
 
 
 def find_app_hwnd() -> int:
-    """Find the main (or splash) window by title prefix."""
+    """Find the main window by title prefix."""
     user32 = _user32()
     found = ctypes.c_void_p()
 
