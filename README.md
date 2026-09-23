@@ -21,8 +21,8 @@ The app:
 2. Lets you pick **master** `core_user_*.dat` and/or `core_char_*.dat` (the pilot whose layout you want everywhere).
 3. **Remembers** those masters in `%LOCALAPPDATA%\EveSettingsCopy\config.json`.
 4. **Copy to all others** — copies master file contents onto every other matching `core_user_*.dat` / `core_char_*.dat`, keeping each target’s filename (so account/character IDs stay correct).
-5. **Backup masters** — copies the selected master files into a unique folder  
-   `%LOCALAPPDATA%\EveSettingsCopy\Backups\backup_YYYY-MM-DD_HH-MM-SS\`.
+5. **Backup masters** — creates a dated folder inside the EVE `settings_Default` path  
+   (e.g. `...\settings_Default\backup_YYYY-MM-DD_HH-MM-SS\`) and copies the selected master files there.
 
 Close EVE before copying. Always keep a backup if you care about existing alt layouts.
 
@@ -32,7 +32,7 @@ Close EVE before copying. Always keep a backup if you care about existing alt la
 |---|---|---|
 | Master files | Select each session | Saved and restored automatically |
 | Targets | Manually add “slaves” | All other valid `core_*` files in the folder |
-| Backups | Manual | One-click dated backup of masters |
+| Backups | Manual | One-click dated folder inside `settings_Default` |
 | UI | Classic tool window | EVE-inspired dark UI |
 
 ## Run (Windows)

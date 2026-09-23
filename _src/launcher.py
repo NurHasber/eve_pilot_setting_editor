@@ -19,7 +19,7 @@ import zipfile
 from pathlib import Path
 from tkinter import messagebox
 
-APP_VERSION = "1.0.10"
+APP_VERSION = "1.0.11"
 APP_NAME = "EVE Settings Copy"
 
 

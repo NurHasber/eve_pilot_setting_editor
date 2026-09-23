@@ -11,7 +11,7 @@ from datetime import datetime
 from pathlib import Path
 
 APP_NAME = "EVE Settings Copy"
-APP_VERSION = "1.0.10"
+APP_VERSION = "1.0.11"
 CONFIG_NAME = "config.json"
 STATUS_RESET_MS = 4000
 
@@ -30,7 +30,7 @@ def app_data_dir() -> Path:
 
 
 def app_dir() -> Path:
-    """Directory for config.json / Backups. Frozen builds use LocalAppData."""
+    """Directory for config.json. Frozen builds use LocalAppData."""
     if getattr(sys, "frozen", False):
         return app_data_dir()
     return Path(__file__).resolve().parent.parent
@@ -142,13 +142,12 @@ def backup_masters(
     master_user: str,
     master_char: str,
 ) -> Path:
-    """Copy selected masters into a unique Backup folder. Returns backup dir path."""
+    """Copy selected masters into a dated folder inside settings_Default. Returns path."""
     stamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    backup_root = app_dir() / "Backups"
-    backup_dir = backup_root / f"backup_{stamp}"
+    backup_dir = settings_dir / f"backup_{stamp}"
     suffix = 1
     while backup_dir.exists():
-        backup_dir = backup_root / f"backup_{stamp}_{suffix}"
+        backup_dir = settings_dir / f"backup_{stamp}_{suffix}"
         suffix += 1
 
     backup_dir.mkdir(parents=True, exist_ok=False)
