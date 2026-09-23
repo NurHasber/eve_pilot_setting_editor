@@ -25,16 +25,19 @@ from ui import theme as T
 from ui.tabs.about import AboutTab
 from ui.tabs.settings_copy import SettingsCopyTab
 from ui.texture import TexturedFrame, texture_photo
-from ui.widgets import StatusBar, TabBar, WindowButton
+from ui.win_icon import apply_window_icon, set_app_user_model_id
 
 
 class MainWindow(tk.Tk):
     def __init__(self) -> None:
         super().__init__()
+        set_app_user_model_id()
         self.title(f"{APP_NAME} v{APP_VERSION}")
         self.geometry(f"{T.WINDOW_W}x{T.WINDOW_H}")
         self.minsize(560, 380)
         self.configure(bg=T.BG)
+        # Icon must be applied before overrideredirect for a reliable taskbar glyph.
+        apply_window_icon(self)
         self.overrideredirect(True)
         self._offset = (0, 0)
         self._status_reset_job: str | None = None
@@ -49,11 +52,9 @@ class MainWindow(tk.Tk):
         )
 
         self._logo_img: tk.PhotoImage | None = None
-        self._icon_img: tk.PhotoImage | None = None
         self._root_bg: tk.PhotoImage | None = None
 
         self._install_root_texture()
-        self._set_taskbar_icon()
         self._build_chrome()
         self._build_body()
         self._validate_remembered_masters()
@@ -62,6 +63,7 @@ class MainWindow(tk.Tk):
         self.master_char.set(self.master_char.get())
         self._center()
         self.after(50, self._ensure_taskbar_button)
+        self.after(80, lambda: apply_window_icon(self))
         self.bind("<Map>", self._on_map)
 
         if not self.settings_dir:
@@ -86,23 +88,6 @@ class MainWindow(tk.Tk):
         self._bg_canvas.create_image(0, 0, anchor="nw", image=self._root_bg, tags="tex")
         self._bg_canvas.tag_lower("tex")
 
-    def _set_taskbar_icon(self) -> None:
-        ico = asset_path("assets", "icons", "app.ico")
-        if ico.is_file():
-            try:
-                self.iconbitmap(default=str(ico))
-            except tk.TclError:
-                pass
-        icon = asset_path("assets", "icons", "logo_eagle_28.png")
-        if not icon.is_file():
-            icon = asset_path("assets", "icons", "logo_eagle.png")
-        if icon.is_file():
-            try:
-                self._icon_img = tk.PhotoImage(file=str(icon))
-                self.iconphoto(True, self._icon_img)
-            except tk.TclError:
-                pass
-
     def _ensure_taskbar_button(self) -> None:
         """overrideredirect hides the taskbar entry — force WS_EX_APPWINDOW."""
         try:
@@ -116,8 +101,10 @@ class MainWindow(tk.Tk):
             style = ctypes.windll.user32.GetWindowLongW(hwnd, GWL_EXSTYLE)
             style = (style & ~WS_EX_TOOLWINDOW) | WS_EX_APPWINDOW
             ctypes.windll.user32.SetWindowLongW(hwnd, GWL_EXSTYLE, style)
+            apply_window_icon(self)
             self.withdraw()
             self.after(20, self.deiconify)
+            self.after(40, lambda: apply_window_icon(self))
         except Exception:
             pass
 

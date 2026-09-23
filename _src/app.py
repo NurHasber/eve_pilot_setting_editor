@@ -13,6 +13,7 @@ if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
 from core import APP_NAME, app_dir  # noqa: E402
+from ui.win_icon import set_app_user_model_id  # noqa: E402
 
 
 def _log_crash(exc: BaseException) -> Path:
@@ -27,7 +28,9 @@ def _log_crash(exc: BaseException) -> Path:
 
 def main() -> None:
     try:
-        # Transparent pulse only — no static PyInstaller splash image.
+        # Before any Tk window — otherwise taskbar sticks to the default Tk feather.
+        set_app_user_model_id()
+
         from ui.boot_splash import BootSplash
         from ui.main_window import MainWindow
 

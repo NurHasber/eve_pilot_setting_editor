@@ -10,6 +10,7 @@ from io import BytesIO
 from PIL import Image
 
 from core import asset_path
+from ui.win_icon import apply_window_icon, set_app_user_model_id
 
 CHROMA = "#010203"  # removed by transparentcolor — no visible "black card"
 
@@ -32,6 +33,9 @@ class BootSplash(tk.Tk):
 
     def __init__(self, duration_ms: int = 1400) -> None:
         super().__init__()
+        set_app_user_model_id()
+        self.title("EVE Settings Copy")
+        apply_window_icon(self)
         self._duration_ms = duration_ms
         self._done = False
         self._photos: list[tk.PhotoImage] = []
